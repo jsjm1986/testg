@@ -1,81 +1,86 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini 实时多模态助手</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Gemini AI 助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>Gemini 实时助手</h1>
-            <div class="media-controls">
-                <button id="startVideo" class="media-btn" title="开启/关闭摄像头">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
-                    </svg>
-                </button>
-                <button id="startAudio" class="media-btn" title="开启/关闭麦克风">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                    </svg>
-                </button>
-                <button id="clearChat" class="media-btn" title="清空聊天记录">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div class="content-container">
-            <div class="media-preview">
-                <div class="video-container">
-                    <video id="videoPreview" autoplay playsinline muted></video>
-                    <div class="video-overlay">
-                        <span class="status-text">摄像头未开启</span>
+    <div class="app-container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-robot"></i>
                     </div>
-                </div>
-                <canvas id="videoCanvas" style="display: none;"></canvas>
-                <div class="audio-container">
-                    <div id="audioVisualizer"></div>
-                    <div class="audio-overlay">
-                        <span class="status-text">麦克风未开启</span>
+                    <h1>Gemini AI 助手</h1>
+                    <div class="status-indicator online">
+                        <span class="status-dot"></span>
+                        <span class="status-text">在线</span>
                     </div>
                 </div>
             </div>
+            
             <div class="chat-messages" id="chatMessages">
                 <div class="welcome-message">
-                    <h2>欢迎使用 Gemini 实时助手</h2>
-                    <p>你可以：</p>
+                    <div class="welcome-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h2>欢迎使用 Gemini AI 助手</h2>
+                    <p>我可以帮助您：</p>
                     <ul>
-                        <li>点击摄像头图标开启视频分析</li>
-                        <li>点击麦克风图标开启语音识别</li>
-                        <li>直接输入文字进行对话</li>
-                        <li>上传图片进行分析</li>
+                        <li><i class="fas fa-check"></i> 回答问题和进行对话</li>
+                        <li><i class="fas fa-check"></i> 语音交互和识别</li>
+                        <li><i class="fas fa-check"></i> 视频分析和理解</li>
+                        <li><i class="fas fa-check"></i> 实时响应和反馈</li>
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="chat-input-container">
-            <div class="input-wrapper">
-                <textarea id="userInput" placeholder="输入消息..." rows="1"></textarea>
-                <div class="button-group">
-                    <label for="fileInput" class="file-upload-btn" title="上传图片">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                        </svg>
-                    </label>
-                    <input type="file" id="fileInput" accept="image/*" multiple style="display: none">
-                    <button id="sendButton" title="发送消息">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                    </button>
+            
+            <div class="media-preview-container">
+                <div class="media-preview">
+                    <video id="videoPreview" autoplay playsinline muted></video>
+                    <div id="audioIndicator" class="audio-indicator">
+                        <div class="audio-waves">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="recording-text">正在录音...</span>
+                    </div>
                 </div>
             </div>
-            <div id="imagePreview" class="image-preview"></div>
+
+            <div class="media-controls">
+                <button id="startVoice" class="media-button">
+                    <i class="fas fa-microphone"></i>
+                    <span>语音输入</span>
+                </button>
+                <button id="startVideo" class="media-button">
+                    <i class="fas fa-video"></i>
+                    <span>视频输入</span>
+                </button>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <textarea id="userInput" placeholder="输入您的问题..." rows="1"></textarea>
+                    <button id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-features">
+                    <span class="feature-hint">
+                        <i class="fas fa-keyboard"></i> 按 Enter 发送
+                    </span>
+                    <span class="feature-hint">
+                        <i class="fas fa-shift"></i> + Enter 换行
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
     <script src="app.js"></script>
